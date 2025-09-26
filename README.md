@@ -1,49 +1,16 @@
-# GitHub Copilot Bootcamp: Discovery and Design
+# AI Coding Assistant Enablement Bootcamp Episode 3
 
-## Quick Start (Skill Lab)
+<img src="https://octodex.github.com/images/Professortocat_v2.png" align="right" height="200px" />
 
-1. Fork this repository to your own GitHub account.
-2. After the fork finishes, open the Actions tab in your fork - a GitHub Actions workflow should start automatically.
-3. When the workflow completes, a GitHub Issue will be created in your fork to guide the next steps of the lab.
+Hey @colby-timm!
 
-That's it. The lab automation (workflow + seeded issue) is the only thing you need to verify to begin.
+Mona here. I'm done preparing your exercise. Hope you enjoy! 💚
 
-## What This Repo Represents
+Remember, it's self-paced so feel free to take a break! ☕️
 
-This is a lightweight full-stack JavaScript starter (React frontend + Express backend) used in the Copilot Bootcamp to demonstrate how GitHub Copilot (especially Agent mode) can help you:
-
-- Understand multi-file changes
-- Coordinate frontend + backend updates
-- Implement small features (e.g., item deletion) quickly and safely
-
-## If Something Doesn't Happen
-
-If you do NOT see a workflow run within ~30 seconds of forking:
-
-- Refresh the Actions tab once
-- Ensure Actions are enabled for your fork (Repository Settings > Actions)
-- Manually trigger any visible workflow if it shows a "Run workflow" button
-
-If the expected Issue wasn't created after the workflow succeeds:
-
-- Open the workflow run log and look for any red (failed) steps
-- Re-run the workflow (top-right "Re-run jobs")
-
-## Next Steps After Automation
-
-Once the Issue appears, follow its guidance to work through the exercise using Copilot Agent mode. The original longer README was intentionally simplified for this skill lab.
-
-## Tech Stack Snapshot
-
-- Frontend: React
-- Backend: Express
-- Testing: Jest
-- Package management: npm workspaces (monorepo)
-
-## License & Conduct
-
-&copy; 2025 Slalom • [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) • [MIT License](https://gh.io/mit)
+[![](https://img.shields.io/badge/Go%20to%20Exercise-%E2%86%92-1f883d?style=for-the-badge&logo=github&labelColor=197935)](https://github.com/colby-timm/copilot-bootcamp-session3-test2/issues/1)
 
 ---
 
-Happy hacking - fork, watch the workflow, find the Issue, and dive in with Copilot.
+&copy; 2025 GitHub &bull; [Code of Conduct](https://www.contributor-covenant.org/version/2/1/code_of_conduct/code_of_conduct.md) &bull; [MIT License](https://gh.io/mit)
+
