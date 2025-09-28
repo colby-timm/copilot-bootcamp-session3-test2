@@ -12,15 +12,15 @@ const server = setupServer(
     return res(
       ctx.status(200),
       ctx.json([
-        { id: 1, name: 'Test Item 1', created_at: '2023-01-01T00:00:00.000Z' },
-        { id: 2, name: 'Test Item 2', created_at: '2023-01-02T00:00:00.000Z' },
+        { id: 1, name: 'Test Item 1', priority: 'P3', created_at: '2023-01-01T00:00:00.000Z' },
+        { id: 2, name: 'Test Item 2', priority: 'P3', created_at: '2023-01-02T00:00:00.000Z' },
       ])
     );
   }),
   
   // POST /api/items handler
   rest.post('/api/items', (req, res, ctx) => {
-    const { name } = req.body;
+    const { name, priority = 'P3' } = req.body;
     
     if (!name || name.trim() === '') {
       return res(
@@ -34,7 +34,31 @@ const server = setupServer(
       ctx.json({
         id: 3,
         name,
+        priority,
         created_at: new Date().toISOString(),
+      })
+    );
+  }),
+
+  // PUT /api/items/:id handler
+  rest.put('/api/items/:id', (req, res, ctx) => {
+    const { id } = req.params;
+    const { priority } = req.body;
+    
+    if (!priority || !['P1', 'P2', 'P3'].includes(priority)) {
+      return res(
+        ctx.status(400),
+        ctx.json({ error: 'Priority must be P1, P2, or P3' })
+      );
+    }
+    
+    return res(
+      ctx.status(200),
+      ctx.json({
+        id: parseInt(id),
+        name: `Test Item ${id}`,
+        priority,
+        created_at: '2023-01-01T00:00:00.000Z',
       })
     );
   })

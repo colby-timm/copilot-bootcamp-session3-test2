@@ -44,22 +44,9 @@ function App() {
       }
       const result = await response.json();
       
-      // Load existing tasks from localStorage to preserve priority changes
-      const savedTasks = loadFromLocalStorage();
-      const savedTasksMap = savedTasks ? 
-        savedTasks.reduce((map, task) => {
-          map[task.id] = task.priority;
-          return map;
-        }, {}) : {};
-
-      // Map backend items to tasks, preserving saved priorities or defaulting to P3
-      const tasksWithPriority = result.map(item => ({
-        ...item,
-        priority: savedTasksMap[item.id] || item.priority || 'P3'
-      }));
-      
-      setData(tasksWithPriority);
-      saveToLocalStorage(tasksWithPriority);
+      // Backend now returns items with priority, no need for complex merging
+      setData(result);
+      saveToLocalStorage(result);
       setError(null);
     } catch (err) {
       setError('Failed to fetch data: ' + err.message);
@@ -79,7 +66,7 @@ function App() {
         headers: {
           'Content-Type': 'application/json',
         },
-        body: JSON.stringify({ name: newItem }),
+        body: JSON.stringify({ name: newItem, priority: newItemPriority }),
       });
 
       if (!response.ok) {
@@ -87,11 +74,8 @@ function App() {
       }
 
       const result = await response.json();
-      const newTask = {
-        ...result,
-        priority: newItemPriority
-      };
-      const updatedTasks = [...data, newTask];
+      // Backend now returns the item with priority, no need to add it manually
+      const updatedTasks = [...data, result];
       setData(updatedTasks);
       saveToLocalStorage(updatedTasks);
       setNewItem('');
@@ -102,12 +86,30 @@ function App() {
     }
   };
 
-  const handlePriorityChange = (itemId, newPriority) => {
-    const updatedTasks = data.map(item => 
-      item.id === itemId ? { ...item, priority: newPriority } : item
-    );
-    setData(updatedTasks);
-    saveToLocalStorage(updatedTasks);
+  const handlePriorityChange = async (itemId, newPriority) => {
+    try {
+      const response = await fetch(`/api/items/${itemId}`, {
+        method: 'PUT',
+        headers: {
+          'Content-Type': 'application/json',
+        },
+        body: JSON.stringify({ priority: newPriority }),
+      });
+
+      if (!response.ok) {
+        throw new Error('Failed to update priority');
+      }
+
+      const updatedItem = await response.json();
+      const updatedTasks = data.map(item => 
+        item.id === itemId ? updatedItem : item
+      );
+      setData(updatedTasks);
+      saveToLocalStorage(updatedTasks);
+    } catch (err) {
+      setError('Error updating priority: ' + err.message);
+      console.error('Error updating priority:', err);
+    }
   };
 
   return (

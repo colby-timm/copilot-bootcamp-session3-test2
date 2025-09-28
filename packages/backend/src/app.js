@@ -19,16 +19,21 @@ db.exec(`
   CREATE TABLE IF NOT EXISTS items (
     id INTEGER PRIMARY KEY AUTOINCREMENT,
     name TEXT NOT NULL,
+    priority TEXT DEFAULT 'P3' CHECK (priority IN ('P1', 'P2', 'P3')),
     created_at TIMESTAMP DEFAULT CURRENT_TIMESTAMP
   )
 `);
 
 // Insert some initial data
-const initialItems = ['Item 1', 'Item 2', 'Item 3'];
-const insertStmt = db.prepare('INSERT INTO items (name) VALUES (?)');
+const initialItems = [
+  { name: 'Item 1', priority: 'P3' },
+  { name: 'Item 2', priority: 'P3' },
+  { name: 'Item 3', priority: 'P3' }
+];
+const insertStmt = db.prepare('INSERT INTO items (name, priority) VALUES (?, ?)');
 
 initialItems.forEach(item => {
-  insertStmt.run(item);
+  insertStmt.run(item.name, item.priority);
 });
 
 console.log('In-memory database initialized with sample data');
@@ -46,13 +51,17 @@ app.get('/api/items', (req, res) => {
 
 app.post('/api/items', (req, res) => {
   try {
-    const { name } = req.body;
+    const { name, priority = 'P3' } = req.body;
     
     if (!name || typeof name !== 'string' || name.trim() === '') {
       return res.status(400).json({ error: 'Item name is required' });
     }
     
-    const result = insertStmt.run(name);
+    if (priority && !['P1', 'P2', 'P3'].includes(priority)) {
+      return res.status(400).json({ error: 'Priority must be P1, P2, or P3' });
+    }
+    
+    const result = insertStmt.run(name, priority);
     const id = result.lastInsertRowid;
     
     const newItem = db.prepare('SELECT * FROM items WHERE id = ?').get(id);
@@ -60,6 +69,31 @@ app.post('/api/items', (req, res) => {
   } catch (error) {
     console.error('Error creating item:', error);
     res.status(500).json({ error: 'Failed to create item' });
+  }
+});
+
+// PUT endpoint to update item priority
+app.put('/api/items/:id', (req, res) => {
+  try {
+    const { id } = req.params;
+    const { priority } = req.body;
+    
+    if (!priority || !['P1', 'P2', 'P3'].includes(priority)) {
+      return res.status(400).json({ error: 'Priority must be P1, P2, or P3' });
+    }
+    
+    const updateStmt = db.prepare('UPDATE items SET priority = ? WHERE id = ?');
+    const result = updateStmt.run(priority, id);
+    
+    if (result.changes === 0) {
+      return res.status(404).json({ error: 'Item not found' });
+    }
+    
+    const updatedItem = db.prepare('SELECT * FROM items WHERE id = ?').get(id);
+    res.json(updatedItem);
+  } catch (error) {
+    console.error('Error updating item:', error);
+    res.status(500).json({ error: 'Failed to update item' });
   }
 });
 
