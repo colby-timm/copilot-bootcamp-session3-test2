@@ -33,15 +33,23 @@ section {
 
 .add-item-section form {
   display: flex;
-  gap: 10px;
+  flex-direction: column;
+  gap: 15px;
   margin-top: 10px;
 }
 
-input {
+.form-row {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
+input[type="text"] {
   flex: 1;
   padding: 8px;
   border: 1px solid #ddd;
   border-radius: 4px;
+  font-size: 14px;
 }
 
 button {
@@ -52,15 +60,91 @@ button {
   border-radius: 4px;
   cursor: pointer;
   font-weight: bold;
+  font-size: 14px;
 }
 
 button:hover {
   background-color: #21a1c9;
 }
 
+/* Priority field styles */
+.priority-section {
+  display: flex;
+  flex-direction: column;
+  gap: 8px;
+}
+
+.priority-options {
+  display: flex;
+  gap: 15px;
+  align-items: center;
+}
+
+.priority-option {
+  display: flex;
+  align-items: center;
+  cursor: pointer;
+}
+
+.priority-option input[type="radio"] {
+  display: none;
+}
+
+.priority-label {
+  padding: 6px 12px;
+  border: 2px solid #7A7A7A;
+  border-radius: 4px;
+  background-color: transparent;
+  color: #7A7A7A;
+  font-weight: bold;
+  font-size: 14px;
+  transition: all 0.2s ease;
+  min-width: 40px;
+  text-align: center;
+}
+
+.priority-label.selected {
+  border-color: #07F2E6;
+  background-color: #07F2E6;
+  color: #282c34;
+}
+
+.priority-label:hover {
+  opacity: 0.8;
+}
+
+.items-list {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+}
+
+.item-row {
+  display: flex;
+  justify-content: space-between;
+  align-items: center;
+  padding: 15px;
+  border: 1px solid #ddd;
+  border-radius: 4px;
+  background-color: white;
+}
+
+.item-name {
+  font-weight: 500;
+  font-size: 16px;
+  color: #282c34;
+}
+
+.item-priority {
+  display: flex;
+  gap: 10px;
+  align-items: center;
+}
+
 ul {
   list-style-type: none;
   padding: 0;
+  margin: 0;
 }
 
 li {

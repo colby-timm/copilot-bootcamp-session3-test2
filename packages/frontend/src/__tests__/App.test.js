@@ -82,12 +82,12 @@ describe('App Component', () => {
     });
     
     // Fill in the form and submit
-    const input = screen.getByPlaceholderText('Enter item name');
+    const input = screen.getByPlaceholderText('Enter New Item');
     await act(async () => {
       await user.type(input, 'New Test Item');
     });
     
-    const submitButton = screen.getByText('Add Item');
+    const submitButton = screen.getByText('Add');
     await act(async () => {
       await user.click(submitButton);
     });
@@ -132,5 +132,64 @@ describe('App Component', () => {
     await waitFor(() => {
       expect(screen.getByText('No items found. Add some!')).toBeInTheDocument();
     });
+  });
+
+  test('displays priority fields with default P3', async () => {
+    await act(async () => {
+      render(<App />);
+    });
+    
+    // Wait for items to load
+    await waitFor(() => {
+      expect(screen.queryByText('Loading data...')).not.toBeInTheDocument();
+    });
+    
+    // Check that all items have P3 priority selected by default
+    const p3Labels = screen.getAllByText('P3');
+    const selectedP3s = p3Labels.filter(label => label.classList.contains('selected'));
+    expect(selectedP3s.length).toBeGreaterThan(0);
+  });
+
+  test('allows changing priority for existing items', async () => {
+    const user = userEvent.setup();
+    
+    await act(async () => {
+      render(<App />);
+    });
+    
+    // Wait for items to load
+    await waitFor(() => {
+      expect(screen.queryByText('Loading data...')).not.toBeInTheDocument();
+    });
+    
+    // Click on P1 for the first item
+    const p1Radios = screen.getAllByDisplayValue('P1');
+    await act(async () => {
+      await user.click(p1Radios[1]); // Skip the first one which is for new item form
+    });
+    
+    // Check that P1 is now selected
+    await waitFor(() => {
+      const p1Labels = screen.getAllByText('P1');
+      const selectedP1s = p1Labels.filter(label => label.classList.contains('selected'));
+      expect(selectedP1s.length).toBeGreaterThan(0);
+    });
+  });
+
+  test('new item priority defaults to P3', async () => {
+    await act(async () => {
+      render(<App />);
+    });
+    
+    // Check that P3 is selected by default in the form
+    const newItemP3Radio = screen.getByDisplayValue('P3');
+    expect(newItemP3Radio).toBeChecked();
+    
+    // Check that P3 label is selected
+    const p3Labels = screen.getAllByText('P3');
+    const formP3Label = p3Labels.find(label => 
+      label.closest('.add-item-section') !== null
+    );
+    expect(formP3Label).toHaveClass('selected');
   });
 });
