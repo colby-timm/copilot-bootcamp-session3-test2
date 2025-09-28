@@ -1,4 +1,4 @@
-name: Step 3-2 # Generate Epics and Stories
+name: Step 3-3 # Generate Epics and Stories
 
 on:
   push:
